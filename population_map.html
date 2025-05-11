@@ -30,19 +30,19 @@
       var oBack = document.getElementById("back");
 
       var catches = {};
-      let populationData = {};
-      let cityPopulationData = {};
+      let serviceRateData = {};
+      let cityServiceRateData = {};
       let regionData = {};
       let cityRegionData = {};
 
       // 加载人口数据
       import('./js/data/population_data.js').then(module => {
-        populationData = module.populationData;
-        cityPopulationData = module.cityPopulationData;
+        serviceRateData = module.serviceRateData;
+        cityServiceRateData = module.cityServiceRateData;
         regionData = module.regionData;
         cityRegionData = module.cityRegionData;
         // 初始加载全国地图
-        loadMap("china", "中国");
+        loadMap("china", "MT中国");
       });
 
       var provinces = [
@@ -140,7 +140,7 @@
               } else {
                 descriptions = regionData[params.name] ? regionData[params.name].description : [];
               }
-              var result = '<b>' + params.name + '</b><br/><b>设备数量：' + value + '台</b>';
+              var result = '<b>' + params.name + '</b><br/><b>Service Coverage Rate：' + value + '%</b>';
               descriptions.forEach(function(desc) {
                 result += '<br/><span style="font-size: 12px;">· ' + desc + '</span>';
               });
@@ -149,12 +149,12 @@
           },
           visualMap: {
             min: 0,
-            max: 15000,
-            text: ['高', '低'],
+            max: 100,
+            text: ['100%', '0%'],
             realtime: false,
             calculable: true,
             inRange: {
-              color: ['lightskyblue', 'yellow', 'orangered']
+              color: ['orangered', 'yellow','lightskyblue']
             }
           },
           series: [
@@ -210,17 +210,17 @@
       function getMapData(mapType, name) {
         var mapData = [];
         if (mapType === 'china') {
-          for (var province in populationData) {
+          for (var province in serviceRateData) {
             mapData.push({
               name: province,
-              value: populationData[province]
+              value: serviceRateData[province]
             });
           }
-        } else if (cityPopulationData[name]) {
-          for (var city in cityPopulationData[name]) {
+        } else if (cityServiceRateData[name]) {
+          for (var city in cityServiceRateData[name]) {
             mapData.push({
               name: city,
-              value: cityPopulationData[name][city]
+              value: cityServiceRateData[name][city]
             });
           }
         }
